@@ -43,11 +43,15 @@ RUN yum install -y http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-cento
 RUN cd /tmp && curl http://download.osgeo.org/mapserver/mapserver-7.0.1.tar.gz | tar xz \
     && cd mapserver-7.0.1 && mkdir build && cd build \
     && cmake -DWITH_CLIENT_WMS=1 -DWITH_CLIENT_WFS=1 -DWITH_CURL=1 -DWITH_PYTHON=1 \
-    -DWITH_KML=1 -DWITH_POSTGIS=0 -DCMAKE_INSTALL_PREFIX=/usr .. \
+    -DWITH_KML=1 -DWITH_POSTGIS=1 -DCMAKE_PREFIX_PATH=/usr/pgsql-9.5 -DCMAKE_INSTALL_PREFIX=/usr .. \
     && make && make install && cd /tmp && rm -rf mapserver-7.0.1
 
 RUN pip install --no-cache numpy==1.10.1 scipy==0.14.0 requests[security]==2.8.1 && \
     pip install --no-cache gunicorn==19.4.1 && \
     pip install --no-cache uwsgi
 
+# add psotgres binarise to PATH
 ENV PATH /usr/pgsql-9.5/bin:$PATH
+
+# put mapserver lib into library load paths
+ENV LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
