@@ -6,7 +6,7 @@ RUN yum install -y http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-cento
     blas-devel \
     cairo-devel \
     cmake \
-    fcig-devel \
+    fcgi-devel \
     freetype-devel \
     fribidi-devel \
     gcc \
@@ -27,8 +27,9 @@ RUN yum install -y http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-cento
     libzip-devel \
     mailcap \
     make \
-    ogr_fdw94 \
+    ogr_fdw95 \
     openssl-devel \
+    postgis2_95-devel \
     postgresql95-devel \
     proj-devel \
     proj-epsg \
