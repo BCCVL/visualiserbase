@@ -1,4 +1,4 @@
-FROM hub.bccvl.org.au/centos/centos7-epel:2016-12-14
+FROM hub.bccvl.org.au/centos/centos7-epel:2017-02-20
 
 RUN yum install -y http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm \
     && yum install -y \
@@ -12,10 +12,12 @@ RUN yum install -y http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-cento
     fribidi-devel \
     gcc \
     gcc-c++ \
+    gdal \
     gdal-devel \
     gdal-python \
     geos-devel \
     giflib-devel \
+    git \
     harfbuzz-devel \
     lapack-devel \
     libcurl-devel \
@@ -37,6 +39,7 @@ RUN yum install -y http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-cento
     proj-nad \
     python-devel \
     python-pip \
+    python-virtualenv \
     sqlite-devel \
     swig \
     which \
@@ -58,11 +61,11 @@ RUN cd /tmp \
     && make \
     && make install \
     && cd / tmp \
-    && rm -fr libspatialite-4.3.0a 
-    
+    && rm -fr libspatialite-4.3.0a
+
 RUN cd /tmp \
-    && curl http://download.osgeo.org/mapserver/mapserver-7.0.3.tar.gz | tar xz \
-    && cd mapserver-7.0.3 \
+    && curl http://download.osgeo.org/mapserver/mapserver-7.0.4.tar.gz | tar xz \
+    && cd mapserver-7.0.4 \
     && mkdir build \
     && cd build \
     && cmake -DWITH_CLIENT_WMS=1 -DWITH_CLIENT_WFS=1 -DWITH_CURL=1 -DWITH_PYTHON=1 \
@@ -70,9 +73,10 @@ RUN cd /tmp \
     && make \
     && make install \
     && cd /tmp \
-    && rm -rf mapserver-7.0.3
+    && rm -rf mapserver-7.0.4
 
-RUN pip install --no-cache numpy==1.12.0b1 scipy==0.18.1 requests[security]==2.12.3 && \
+RUN pip install --no-cache --upgrade setuptools virtualenv pip && \
+    pip install --no-cache numpy==1.12.0b1 scipy==0.18.1 requests[security]==2.12.3 && \
     pip install --no-cache gunicorn==19.6.0 && \
     pip install --no-cache uwsgi==2.0.14
 
