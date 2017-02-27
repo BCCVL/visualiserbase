@@ -22,7 +22,7 @@ node('docker') {
     stage('Build') {
 
         imagename = "hub.bccvl.org.au/bccvl/visualiserbase:${dateTag()}"
-        img = docker.build(imagename, '--pull --no-cache --build-arg PIP_INDEX_URL=${INDEX_URL} --build-arg PIP_TRUSTED_HOST=${INDEX_HOST} --build-arg PIP_PRE=${pip_pre} .')
+        img = docker.build(imagename, "--pull --no-cache --build-arg PIP_INDEX_URL=${INDEX_URL} --build-arg PIP_TRUSTED_HOST=${INDEX_HOST} --build-arg PIP_PRE=${pip_pre} .")
 
     }
 
