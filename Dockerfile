@@ -78,6 +78,7 @@ RUN cd /tmp \
 RUN pip install --no-cache --upgrade setuptools virtualenv pip && \
     pip install --no-cache numpy==1.12.0b1 scipy==0.18.1 requests[security]==2.12.3 && \
     pip install --no-cache gunicorn==19.6.0 && \
+    pip install --no-cache guscmversion && \
     pip install --no-cache uwsgi==2.0.14
 
 # add psotgres binarise to PATH
