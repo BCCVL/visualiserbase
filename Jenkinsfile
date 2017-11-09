@@ -5,9 +5,14 @@ node('docker') {
 
     def pip_pre = "True"
     def pypi_credentials = 'pypi_index_url_dev'
-    if (params.stage == 'rc' || params.stage == 'prod') {
+    if (params.stage == 'prod') {
         pip_pre = "False"
-        pypi_credentials = 'pypi_index_url_prod'
+    }
+
+    def PYPI_INDEX_CRED = 'pypi_index_url_dev'
+    if (params.stage == 'rc' || params.stage == 'prod') {
+        // no dev pre releases for rc and prod
+        PYPI_INDEX_CRED = 'pypi_index_url_prod'
     }
 
     // fetch source
@@ -20,7 +25,7 @@ node('docker') {
     // build image
     stage('Build') {
 
-        withCredentials([string(credentialsId: pypi_credentials, variable: 'PYPI_INDEX_URL')]) {
+        withCredentials([string(credentialsId: PYPI_INDEX_CRED, variable: 'PYPI_INDEX_URL')]) {
             docker.withRegistry('https://hub.bccvl.org.au', 'hub.bccvl.org.au') {
                 imagename = "hub.bccvl.org.au/bccvl/visualiserbase:${dateTag()}"
                 img = docker.build(imagename, "--pull --no-cache --build-arg PIP_INDEX_URL=${PYPI_INDEX_URL} --build-arg PIP_PRE=${pip_pre} .")
