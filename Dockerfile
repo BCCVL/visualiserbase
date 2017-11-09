@@ -1,4 +1,4 @@
-FROM hub.bccvl.org.au/centos/centos7-epel:2017-02-20
+FROM hub.bccvl.org.au/centos/centos7-epel:2017-11-08
 
 # configure pypi index to use
 ARG PIP_INDEX_URL
@@ -53,13 +53,13 @@ RUN yum install -y http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-cento
     && yum clean all
 
 RUN cd /tmp \
-    && curl http://www.gaia-gis.it/gaia-sins/freexl-1.0.2.tar.gz | tar xz \
-    && cd freexl-1.0.2 \
+    && curl http://www.gaia-gis.it/gaia-sins/freexl-1.0.4.tar.gz | tar xz \
+    && cd freexl-1.0.4 \
     && ./configure \
     && make \
     && make install \
     && cd /tmp \
-    && rm -fr freexl-1.0.2 \
+    && rm -fr freexl-1.0.4 \
     && cd /tmp \
     && curl http://www.gaia-gis.it/gaia-sins/libspatialite-4.3.0a.tar.gz | tar xz \
     && cd libspatialite-4.3.0a \
@@ -70,8 +70,8 @@ RUN cd /tmp \
     && rm -fr libspatialite-4.3.0a
 
 RUN cd /tmp \
-    && curl http://download.osgeo.org/mapserver/mapserver-7.0.4.tar.gz | tar xz \
-    && cd mapserver-7.0.4 \
+    && curl http://download.osgeo.org/mapserver/mapserver-7.0.6.tar.gz | tar xz \
+    && cd mapserver-7.0.6 \
     && mkdir build \
     && cd build \
     && cmake -DWITH_CLIENT_WMS=1 -DWITH_CLIENT_WFS=1 -DWITH_CURL=1 -DWITH_PYTHON=1 \
@@ -79,46 +79,20 @@ RUN cd /tmp \
     && make \
     && make install \
     && cd /tmp \
-    && rm -rf mapserver-7.0.4
+    && rm -rf mapserver-7.0.6
 
 RUN export PIP_INDEX_URL=${PIP_INDEX_URL} && \
     export PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST} && \
     export PIP_NO_CACHE_DIR=False && \
     export PIP_PRE=${PIP_PRE} && \
     pip install --upgrade setuptools virtualenv pip && \
-    pip install numpy==1.12.0b1 scipy==0.18.1 requests[security]==2.12.3 && \
-    pip install gunicorn==19.6.0 && \
+    pip install numpy==1.13.3 scipy==1.0.0 requests[security]==2.18.4 && \
+    pip install gunicorn==19.7.1 && \
     pip install guscmversion && \
-    pip install uwsgi==2.0.14
+    pip install uwsgi==2.0.15
 
 # add psotgres binarise to PATH
 ENV PATH /usr/pgsql-9.6/bin:$PATH
 
 # put mapserver lib into library load paths
 ENV LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
-
-# TODO: need to sync pytho package versions here with those in the actual bccvl visualiser package
-# TODO: consider install gdal from source to get current versions
-
-
-# # Py3.5 (No Mapscript) ... could do what MapMint does... use mapserver as is with mapfiles?
-# sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm
-# yum install -y python35u python35u-pip
-# yum install gdal ... get binaries as well
-
-
-# Mapnik: (on WFS)
-
-# yum install-y  bzip2
-
-# curl -L https://github.com/mapnik/mapnik/releases/download/v3.0.12/mapnik-v3.0.12.tar.bz2 | tar xj
-# cd mapnik-v3.0.12
-
-# yum install -y libwebp-devel
-# yum install -y boost-devel boost-regex
-
-# ./configure
-# make
-# make install
-
-
