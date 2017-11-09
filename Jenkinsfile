@@ -4,12 +4,11 @@ node('docker') {
     def img
 
     def pip_pre = "True"
+    def pypi_credentials = 'pypi_index_url_dev'
     if (params.stage == 'rc' || params.stage == 'prod') {
         pip_pre = "False"
+        pypi_credentials = 'pypi_index_url_prod'
     }
-
-    def INDEX_HOST = env.PIP_INDEX_HOST
-    def INDEX_URL = "http://${INDEX_HOST}:3141/bccvl/prod/+simple/"
 
     // fetch source
     stage('Checkout') {
@@ -21,15 +20,21 @@ node('docker') {
     // build image
     stage('Build') {
 
-        imagename = "hub.bccvl.org.au/bccvl/visualiserbase:${dateTag()}"
-        img = docker.build(imagename, "--pull --no-cache --build-arg PIP_INDEX_URL=${INDEX_URL} --build-arg PIP_TRUSTED_HOST=${INDEX_HOST} --build-arg PIP_PRE=${pip_pre} .")
+        withCredentials([string(credentialsId: pypi_credentials, variable: 'PYPI_INDEX_URL')]) {
+            docker.withRegistry('https://hub.bccvl.org.au', 'hub.bccvl.org.au') {
+                imagename = "hub.bccvl.org.au/bccvl/visualiserbase:${dateTag()}"
+                img = docker.build(imagename, "--pull --no-cache --build-arg PIP_INDEX_URL=${PIP_INDEX_URL} --build-arg PIP_PRE=${pip_pre} .")
+            }
+        }
 
     }
 
     // publish image to registry
     stage('Publish') {
 
-        img.push()
+        docker.withRegistry('https://hub.bccvl.org.au', 'hub.bccvl.org.au') {
+            img.push()
+        }
 
         slackSend color: 'good', message: "New Image ${imagename}\n${env.JOB_URL}"
 
