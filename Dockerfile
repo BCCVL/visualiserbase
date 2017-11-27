@@ -6,7 +6,7 @@ ARG PIP_TRUSTED_HOST
 # If set, pip will look for pre releases
 ARG PIP_PRE
 
-RUN yum install -y http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm \
+RUN yum install -y http://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm \
     && yum install -y \
     atlas-devel \
     blas-devel \
@@ -38,8 +38,8 @@ RUN yum install -y http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-cento
     make \
     ogr_fdw96 \
     openssl-devel \
-    postgis2_96-devel \
-    postgresql96-devel \
+    postgis24_10-devel \
+    postgresql10-devel \
     proj-devel \
     proj-epsg \
     proj-nad \
@@ -92,7 +92,7 @@ RUN export PIP_INDEX_URL=${PIP_INDEX_URL} && \
     pip install uwsgi==2.0.15
 
 # add psotgres binarise to PATH
-ENV PATH /usr/pgsql-9.6/bin:$PATH
+ENV PATH /usr/pgsql-10/bin:$PATH
 
 # put mapserver lib into library load paths
 ENV LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
