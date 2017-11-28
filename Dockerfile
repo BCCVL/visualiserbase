@@ -75,7 +75,7 @@ RUN cd /tmp \
     && mkdir build \
     && cd build \
     && cmake -DWITH_CLIENT_WMS=1 -DWITH_CLIENT_WFS=1 -DWITH_CURL=1 -DWITH_PYTHON=1 \
-    -DWITH_KML=1 -DWITH_POSTGIS=1 -DCMAKE_PREFIX_PATH=/usr/pgsql-9.6 -DCMAKE_INSTALL_PREFIX=/usr .. \
+    -DWITH_KML=1 -DWITH_POSTGIS=1 -DCMAKE_PREFIX_PATH=/usr/pgsql-10 -DCMAKE_INSTALL_PREFIX=/usr .. \
     && make \
     && make install \
     && cd /tmp \
